@@ -32,7 +32,7 @@ app.get('/etudiants', (req, res)=>{
             res.status(500).send('erreur lors de la récupération des etudiants')
             
         } else {
-            res.json(data).status(200);
+            res.send("le serveur est lancé").status(200);
             
 
             
