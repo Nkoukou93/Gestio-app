@@ -25,6 +25,10 @@ connexion.connect((err) => {
 
 
 //route pour recuperer les etudiants dans la base de données
+app.get('/', (req, res)=>{
+    res.send('serveur lancé')
+})
+
 app.get('/etudiants', (req, res)=>{
     connexion.query('SELECT * FROM etudiants',(erreur,data) =>{
         if (erreur) {
@@ -32,7 +36,7 @@ app.get('/etudiants', (req, res)=>{
             res.status(500).send('erreur lors de la récupération des etudiants')
             
         } else {
-            res.send("le serveur est lancé").status(200);
+            res.json(data).status(200);
             
 
             
