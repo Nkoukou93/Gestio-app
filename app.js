@@ -27,7 +27,7 @@ connexion.connect((err) => {
 
 //route pour recuperer les etudiants dans la base de données
 app.get('/', (req, res)=>{
-    res.send('serveur lancé')
+    res.send('Bienvenu sur Gestio: la plateforme pour gerer efficaccement vos apprenants')
 })
 
 app.get('/etudiants', (req, res)=>{
