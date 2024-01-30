@@ -3,14 +3,15 @@ const app = express ();
 const port = 4000;
 const bodyParser = require('body-parser');
 
-const mysql = require("mysql2")
+const mysql = require("mysql")
 
 
 const connexion = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "", 
-    database :"gestioapp"
+    host: "mysql-guilaineyeman.alwaysdata.net",
+    user: "340838",
+    password: "jenaot2093@", 
+    database :"guilaineyeman_gestioapp"
+    
 })
 connexion.connect((err) => {
     if (err) {
