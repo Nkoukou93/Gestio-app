@@ -1,9 +1,27 @@
 const express = require ('express');
 const app = express ();
-const port = 4000;
+const port = 3000;
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express');
+const options = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API Gestio App',
+            version: '1.0.0',
+            description: "Api de gestion des etudiants"
+        },
+        servers: [
+            {
+                url: 'https://gestio-app.onrender.com',
+            },
+        ]
+    },
+    apis: ['./app.js'],
+};
 
-const mysql = require("mysql")
+
+const mysql = require("mysql");
 
 
 const connexion = mysql.createConnection({
@@ -25,10 +43,29 @@ connexion.connect((err) => {
      app.use(bodyParser.urlencoded ({ extended: false }));
 
 
-//route pour recuperer les etudiants dans la base de données
+//route pour acceder à la page d'accueil
+/*
+
+ */
+
 app.get('/', (req, res)=>{
     res.send('Bienvenu sur Gestio: la plateforme pour gerer efficaccement vos apprenants')
 })
+/*
+* @swagger
+* /etudiants:
+*   get:
+*     description: récupérer tous les étudiants de Gestio app
+*     reponses:
+*      200:
+*         description: une liste d'étudiant est retournée
+*         content:
+*           application/json:
+        500:
+          description: Erreur interne du serveur
+
+
+*/
 
 app.get('/etudiants', (req, res)=>{
     connexion.query('SELECT * FROM etudiants',(erreur,data) =>{
@@ -46,6 +83,19 @@ app.get('/etudiants', (req, res)=>{
     });
 });
 //Rooute pour afficher un etudiant à artir de son id
+/*
+*@swagger
+* /etudiants/{id}:
+*   get:
+*       description : Renvoi l'objet Etudiant correspondant a l'identifiant passé en paramètre
+*       responses:
+*          200:
+*              description : Un  Etudiant est renvoyé
+*          400 :
+*               description :Etudiant non trouvé
+
+
+*/ 
 app.get("/etudiants/:id",(req,res)=> {
     let id= req.params.id;
     connexion.query(`SELECT * FROM etudiants WHERE id=?`,[id],(err,rows)=>{
@@ -59,6 +109,17 @@ app.get("/etudiants/:id",(req,res)=> {
 
     
 //Route pour enregistrer les etudiants dans la base de données
+/*
+ * @swagger
+* /etudiants:
+*   post:
+*   description: Ajouter un étudiant
+*   responses:
+*     200:
+*         description: Enregistrement réussi avec succès
+*     500:
+*          description: Erreur lors de la création d un etudiant
+ */
 app.post('/etudiants',(req,res) =>{
     const {
         nom , prenom , datedenaiss , email , nomutilisateur , quartier,sexe, filiere, niveau,activitesextrasco,motdepasse,photo
@@ -81,6 +142,17 @@ connexion.query('INSERT INTO etudiants (nom , prenom , datedenaiss , email , nom
 
 });
 //route pour mettre à jour les etudiants de la base de données à partir de l'id sellectionné
+/*
+*@swagger
+* /etudiants/{id}:
+*   put:
+*   description: Mettre à jour un étudiant par son id
+*   responses:
+*      200 : 
+*           description : Mis à jour réussi avec succès
+*      404 :  
+*           description : L'identifiant n'existe pas
+ */
 app.put('/etudiants/:id',(req,resp)=>{
     const{id} = req.params;
     const {nom , prenom , datedenaiss , email , nomutilisateur , quartier,sexe, filiere, niveau,activitesextrasco,motdepasse,photo} = req.body
@@ -94,6 +166,18 @@ app.put('/etudiants/:id',(req,resp)=>{
             }
             })
         });
+        /*
+        * @swagger
+        * /etudiants/:id :
+        *  delete:
+        *      description : Supprimer un étudiant par son id
+        *      responses:
+        *       200:
+        *          description : Suppresion réussie avec succès'
+        *       404:
+        *          description : Impossible de supprimer l'etudiant
+         
+         */
          app.delete('/etudiants/:id',(req,resp)=> {
             const { id } = req.params;
             Etudiants.supprimerEtudiant(id,(err,resultat)=>{
@@ -107,12 +191,16 @@ app.put('/etudiants/:id',(req,resp)=>{
                         })
                         });
         //-------------------------Gestion des administrateurs-------------------------------
-        app.get("/administrateurs",(req,resp)=>{
-            Administrateurs.listerAdmin((err,admins)=>{
-                if (err) throw err;
-                resp.status(200).json(admins);
-                })
-                });
+        //app.get("/administrateurs",(req,resp)=>{
+            //Administrateurs.listerAdmin((err,admins)=>{
+                //if (err) throw err;
+                //resp.status(200).json(admins);
+                //})
+                //});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(options));
+
+
     
      
 

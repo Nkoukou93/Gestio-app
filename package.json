@@ -4,7 +4,9 @@
     "express": "^4.18.2",
     "express-myconnection": "^1.0.4",
     "mysql": "^2.18.1",
-    "mysql2": "^3.9.1"
+    "mysql2": "^3.9.1",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^5.0.0"
   },
   "name": "gestio-app",
   "description": "",
@@ -18,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "swagger-autogen": "^2.23.7"
   }
 }
